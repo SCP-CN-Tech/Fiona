@@ -4,7 +4,7 @@ var config = {
   "CMD_PREFIX": "#/",
   "DIS_TOKEN": null,
   "DIS_ADMINS": [],
-  "DIS_VERIFY_TYPE": null,
+  "DIS_VERIFY_TYPE": "",
   "DIS_VERIFY_CHAN": null,
   "DIS_VERIFY_MSG": null,
   "DIS_VERIFY_REACT": null,
