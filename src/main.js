@@ -16,7 +16,7 @@ var config = {
 function loadEnv(cnfg) {
   const configNames = [
     "CMD_PREFIX", "SCP_SITE", "SCP_CHECK_TYPE",
-    "DIS_TOKEN", "DIS_ADMINS", "DIS_VERIFY_TYPE",
+    "DIS_TOKEN", "DIS_VERIFY_TYPE",
     "DIS_VERIFY_CHAN", "DIS_VERIFY_MSG", "DIS_VERIFY_REACT",
     "DIS_MEM_ROLE"
   ]
@@ -24,6 +24,7 @@ function loadEnv(cnfg) {
     if (process.env["BHL_"+name]&process.env["BHL_"+name]!==undefined)
     { cnfg[name] = process.env["BHL_"+name] };
   }
+  if(process.env.BHL_DIS_ADMINS.startsWith("[")) {cnfg.DIS_ADMINS=JSON.parse(process.env.BHL_DIS_ADMINS)} else {cnfg.DIS_ADMINS=process.env.BHL_DIS_ADMINS}
   return cnfg;
 }
 
