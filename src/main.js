@@ -1,29 +1,29 @@
-// Adding the bot: discordapp.com/oauth2/authorize?client_id=622678611971014656&scope=bot&permissions=2080894007
-
 // loads config
 const fs = require('fs');
 var config = {
-  "cmdPrefix": "#/",
-  "SCPsite": "cn",
-  "DisToken": "",
-  "DisAdmins": [],
-  "DisVerifyType": "",
-  "DisVerifyChan": "",
-  "DisVerifyMsg": "",
-  "DisVerifyReact": "",
-  "DisMemberRole": "",
-  "DisSCPMemberRole": ""
+  "CMD_PREFIX": "#/",
+  "DIS_TOKEN": null,
+  "DIS_ADMINS": [],
+  "DIS_VERIFY_TYPE": null,
+  "DIS_VERIFY_CHAN": null,
+  "DIS_VERIFY_MSG": null,
+  "DIS_VERIFY_REACT": null,
+  "DIS_MEM_ROLE": null,
+  "SCP_CHECK_TYPE": "exists",
+  "SCP_SITE": "cn"
 }
 
 function loadEnv(cnfg) {
-  if (process.env.BHL_SCP_SITE) { cnfg.SCPsite = process.env.BHL_SCP_SITE };
-  if (process.env.BHL_DIS_TOKEN) { cnfg.DisToken = process.env.BHL_DIS_TOKEN };
-  if (process.env.BHL_DIS_ADMINS) { cnfg.DisAdmins = process.env.BHL_DIS_ADMINS };
-  if (process.env.BHL_DIS_VERIFY_TYPE) { cnfg.DisVerifyType = process.env.BHL_DIS_VERIFY_TYPE };
-  if (process.env.BHL_DIS_VERIFY_CHAN) { cnfg.DisVerifyChan = process.env.BHL_DIS_VERIFY_CHAN };
-  if (process.env.BHL_DIS_VERIFY_MSG) { cnfg.DisVerifyMsg = process.env.BHL_DIS_VERIFY_MSG };
-  if (process.env.BHL_DIS_VERIFY_REACT) { cnfg.DisVerifyReact = process.env.BHL_DIS_VERIFY_REACT };
-  if (process.env.BHL_CMD_PREFIX) { cnfg.cmdPrefix = process.env.BHL_CMD_PREFIX };
+  const configNames = [
+    "CMD_PREFIX", "SCP_SITE", "SCP_CHECK_TYPE",
+    "DIS_TOKEN", "DIS_ADMINS", "DIS_VERIFY_TYPE",
+    "DIS_VERIFY_CHAN", "DIS_VERIFY_MSG", "DIS_VERIFY_REACT",
+    "DIS_MEM_ROLE"
+  ]
+  for (name of configNames) {
+    if (process.env["BHL_"+name]&process.env["BHL_"+name]!==undefined)
+    { cnfg[name] = process.env["BHL_"+name] };
+  }
   return cnfg;
 }
 
@@ -35,11 +35,11 @@ try {
 } catch (e) { if (e.code === 'MODULE_NOT_FOUND') return; }
 loadEnv(config);
 
-if(!config.DisToken||config.DisToken===undefined) {
+if(!config.DIS_TOKEN||config.DIS_TOKEN===undefined) {
   throw new Error("Discord token is required.")
 }
 
-var pref = config.cmdPrefix;
+var pref = config.CMD_PREFIX;
 
 // creates CmdHandler class for handling Discord commands
 
@@ -110,12 +110,12 @@ class Verifier {
   constructor(client, scp){
     this.client = client;
     this.scp = scp;
-    this.type = config.DisVerifyType.toLowerCase();
-    this.channel = config.DisVerifyChan;
-    this.message = config.DisVerifyMsg;
-    this.reaction = config.DisVerifyReact;
-    this.role = config.DisMemberRole;
-    this.scpRole = config.DisSCPMemberRole;
+    this.type = config.DIS_VERIFY_TYPE.toLowerCase();
+    this.scptype = config.SCP_CHECK_TYPE.toLowerCase();
+    this.channel = config.DIS_VERIFY_CHAN;
+    this.message = config.DIS_VERIFY_MSG;
+    this.reaction = config.DIS_VERIFY_REACT;
+    this.role = config.DIS_MEM_ROLE;
   }
 
   async __getUsers(user) {
@@ -124,42 +124,47 @@ class Verifier {
     return users;
   }
 
-  __checkExists(users, flag) {
-    if (flag.toLowerCase()==="m") {
+  __checker(...args){
+    var boo;
+    if (this.scptype==="exists") {
+      boo = this.__checkExists(...args);
+    } else if (this.scptype==="member") {
+      boo = this.__checkMember(...args);
+    } else boo = false;
+    return boo;
+  }
+
+  __checkExists(users, site) {
+    if (users instanceof Map) {
       if ( !users || users === undefined || users.size === 0 ) return false;
       var exists = false;
       users.forEach((id,user) => {if (!user.deleted) { exists = true; }})
-
-
       return exists;
-    } else if (flag.toLowerCase()==="s") {
+    } else if (users instanceof WikidotUser) {
       if ( users === undefined || users.length === 0 ) return false;
         if (!user.deleted) return true; else return false;
     }
   }
 
-  __checkMember(site, flag) {
-    if (flag.toLowerCase()==="m") {
-      if (this.__wikidotUser === undefined || this.__wikidotUser.length === 0) return false;
-      for (user of this.__wikidotUser) {
-        if (user.memberOf(site)) { this.__SCPMember = user; return true; }
-      }
-      return false;
-    } else if (flag.toLowerCase()==="s") {
-      if (this.__SCPUser.memberOf(site)) {
-        this.__SCPMember = this.__SCPUser; return true;
-      } else return false;
+  __checkMember(users, site) {
+    if (users instanceof Map) {
+      if ( !users || users === undefined || users.size === 0 ) return false;
+      var member = false;
+      users.forEach((id,user) => {if (user.memberOf(site)) { member = true; }})
+      return member;
+    } else if (users instanceof WikidotUser) {
+      if (users.memberOf(site)) return true;  else return false;
     }
   }
 }
 
 // loads module and handlers
 const Scpper = require('scpper2.js');
-const scpClient = new Scpper.Scpper({site:config.SCPsite});
+const scpClient = new Scpper.Scpper({site:config.SCP_SITE});
 
 const Discord = require('discord.js');
 const disClient = new Discord.Client({ autoReconnect: true });
-disClient.login(config.DisToken);
+disClient.login(config.DIS_TOKEN);
 
 disClient.on("ready", () => {
   console.log(`Logged into ${disClient.user.tag}.`)
@@ -168,12 +173,12 @@ disClient.on("ready", () => {
 disClient.on("message", msg => {
   if (!msg.content.toLowerCase().startsWith(pref)||msg.content.toLowerCase().startsWith(pref+'verify')) return;
   var access = 0;
-  if (config.DisAdmins instanceof Array) {
-    for (role of config.DisAdmins) {
+  if (config.DIS_ADMINS instanceof Array) {
+    for (role of config.DIS_ADMINS) {
       if (msg.member.roles.has(role)) { access += 1; }
     }
-  } else if (config.DisAdmins instanceof String) {
-    if (msg.member.roles.has(config.DisAdmins)) { access += 1; }
+  } else if (config.DIS_ADMINS instanceof String) {
+    if (msg.member.roles.has(config.DIS_ADMINS)) { access += 1; }
   }
   if (access === 0) {
     msg.channel.send("你沒有使用此指令的權限。\nYou do not have the permissions to use this command.");
@@ -204,11 +209,11 @@ if (verifier.type === "reaction") {
     if (!msg.content.toLowerCase().startsWith(pref+'verify ')) return;
     var username = msg.content.slice((pref+'verify ').length);
     verifier.__getUsers(username).then(users => {
-      if (verifier.__checkExists(users, 'm')) {
+      if (verifier.__checker(users, config.SCP_SITE)) {
         msg.member.addRole(verifier.role);
-        msg.channel.send("Access granted.");
+        msg.channel.send("權限已賦予。\nAccess granted.");
       } else {
-        msg.channel.send("Access denied.");
+        msg.channel.send("權限不足。\nAccess denied.");
       };
     })
   })
