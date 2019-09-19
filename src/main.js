@@ -14,17 +14,15 @@ var config = {
 }
 
 function loadEnv(cnfg) {
-  const configNames = [
-    "CMD_PREFIX", "SCP_SITE", "SCP_CHECK_TYPE",
-    "DIS_TOKEN", "DIS_VERIFY_TYPE",
-    "DIS_VERIFY_CHAN", "DIS_VERIFY_MSG", "DIS_VERIFY_REACT",
-    "DIS_MEM_ROLE"
-  ]
-  for (name of configNames) {
-    if (process.env["BHL_"+name]&process.env["BHL_"+name]!==undefined)
-    { cnfg[name] = process.env["BHL_"+name] };
-  }
-  if(process.env.BHL_DIS_ADMINS.startsWith("[")) {cnfg.DIS_ADMINS=JSON.parse(process.env.BHL_DIS_ADMINS)} else {cnfg.DIS_ADMINS=process.env.BHL_DIS_ADMINS}
+  if (process.env.BHL_CMD_PREFIX) { cnfg.CMD_PREFIX = process.env.BHL_CMD_PREFIX };
+  if (process.env.BHL_SCP_SITE) { cnfg.SCP_SITE = process.env.BHL_SCP_SITE };
+  if (process.env.BHL_SCP_CHECK_TYPE) { cnfg.SCP_CHECK_TYPE = process.env.BHL_SCP_CHECK_TYPE };
+  if (process.env.BHL_DIS_TOKEN) { cnfg.DIS_TOKEN = process.env.BHL_DIS_TOKEN };
+  if (process.env.BHL_DIS_VERIFY_TYPE) { cnfg.DIS_VERIFY_TYPE = process.env.BHL_DIS_VERIFY_TYPE };
+  if (process.env.BHL_DIS_VERIFY_CHAN) { cnfg.DIS_VERIFY_CHAN = process.env.BHL_DIS_VERIFY_CHAN };
+  if (process.env.BHL_DIS_VERIFY_MSG) { cnfg.DIS_VERIFY_MSG = process.env.BHL_DIS_VERIFY_MSG };
+  if (process.env.BHL_DIS_VERIFY_REACT) { cnfg.DDIS_VERIFY_REACT = process.env.BHL_DIS_VERIFY_REACT };
+  if (process.env.BHL_DIS_ADMINS.startsWith("[")) {cnfg.DIS_ADMINS=JSON.parse(process.env.BHL_DIS_ADMINS)} else {cnfg.DIS_ADMINS=process.env.BHL_DIS_ADMINS}
   return cnfg;
 }
 
