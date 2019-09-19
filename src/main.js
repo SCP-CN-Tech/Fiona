@@ -22,6 +22,7 @@ function loadEnv(cnfg) {
   if (process.env.BHL_DIS_VERIFY_CHAN) { cnfg.DIS_VERIFY_CHAN = process.env.BHL_DIS_VERIFY_CHAN };
   if (process.env.BHL_DIS_VERIFY_MSG) { cnfg.DIS_VERIFY_MSG = process.env.BHL_DIS_VERIFY_MSG };
   if (process.env.BHL_DIS_VERIFY_REACT) { cnfg.DIS_VERIFY_REACT = process.env.BHL_DIS_VERIFY_REACT };
+  if (process.env.BHL_DIS_MEM_ROLE) { cnfg.DIS_MEM_ROLE = process.env.BHL_DIS_MEM_ROLE };
   if (process.env.BHL_DIS_ADMINS.startsWith("[")) {cnfg.DIS_ADMINS=JSON.parse(process.env.BHL_DIS_ADMINS)} else {cnfg.DIS_ADMINS=process.env.BHL_DIS_ADMINS}
   return cnfg;
 }
