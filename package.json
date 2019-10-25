@@ -1,6 +1,6 @@
 {
   "name": "BanHammerLite",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Just a lightweight banhammer used on SCP-CN Unofficial Discord.",
   "main": "src/main.js",
   "dependencies": {
@@ -9,7 +9,7 @@
   },
   "devDependencies": {},
   "scripts": {
-  "start": "cd src && node main.js",
+    "start": "cd src && node main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

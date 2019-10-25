@@ -32,7 +32,7 @@ function loadEnv(cnfg) {
 }
 
 try {
-  let customCnfg = JSON.parse(fs.readFileSync('./data/config.json', 'utf8'));
+  let customCnfg = JSON.parse(fs.readFileSync('./data/debugcnfg.json', 'utf8'));
   for (var prop in customCnfg) {
     if (config.hasOwnProperty(prop) && customCnfg.hasOwnProperty(prop)) { config[prop] = customCnfg[prop] }
   }
@@ -123,22 +123,15 @@ class Verifier {
   }
 
   async __getUsers(user) {
-    var users = await this.scp.findUsers(user);
+    var targetSite;
+    if (this.scptype==="member") { targetSite = config.SCP_SITE } else targetSite = null;
+    var users = await this.scp.findUsers(user, {site: targetSite});
     //users = users.values().filter(each => each.displayName.toLowerCase() === user.toLowerCase());
     return users;
   }
 
-  __checker(...args){
-    var boo;
-    if (this.scptype==="exists") {
-      boo = this.__checkExists(...args);
-    } else if (this.scptype==="member") {
-      boo = this.__checkMember(...args);
-    } else boo = false;
-    return boo;
-  }
-
-  __checkExists(users, site) {
+  __checker(users){
+    if (this.scptype!=="exists"&&this.scptype!=="member") return false;
     if (users instanceof Map) {
       if ( !users || users === undefined || users.size === 0 ) return false;
       var exists = false;
@@ -147,17 +140,6 @@ class Verifier {
     } else if (users instanceof WikidotUser) {
       if ( users === undefined || users.length === 0 ) return false;
         if (!user.deleted) return true; else return false;
-    }
-  }
-
-  __checkMember(users, site) {
-    if (users instanceof Map) {
-      if ( !users || users === undefined || users.size === 0 ) return false;
-      var member = false;
-      users.forEach((id,user) => {if (user.memberOf(site)) { member = true; }})
-      return member;
-    } else if (users instanceof WikidotUser) {
-      if (users.memberOf(site)) return true;  else return false;
     }
   }
 }
@@ -213,7 +195,8 @@ if (verifier.type === "reaction") {
     if (!msg.content.toLowerCase().startsWith(pref+'verify ')) return;
     var username = msg.content.slice((pref+'verify ').length);
     verifier.__getUsers(username).then(users => {
-      if (verifier.__checker(users, config.SCP_SITE)) {
+      //console.log(users)
+      if (verifier.__checker(users)) {
         msg.member.addRole(verifier.role);
         msg.channel.send("權限已賦予。\nAccess granted.");
       } else {
