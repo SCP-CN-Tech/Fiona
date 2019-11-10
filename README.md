@@ -16,6 +16,6 @@
 | DIS_VERIFY_REACT | Optional | <code>String</code> | <code>null</code> | The reaction id/distinguisher to add to message if <code>DIS_VERIFY_TYPE</code> is <code>reaction</code>. |
 | DIS_MEM_ROLE | Optional | <code>String</code> | <code>null</code> | The role id to add to member if <code>DIS_VERIFY_TYPE</code> is enabled. |
 | SCP_CHECK_TYPE | Optional | <code>String</code> | <code>exists</code> | Method for checking for user information on ScpperDB if <code>DIS_VERIFY_TYPE</code> is <code>wikidotname</code>. Possible values: <code>exists</code> to check if any user of the provided username exists or <code>member</code> to check if any user of the provided username is a member of provided site. |
-| SCP_SITE | Optional | <code>String</code> | <code>cn</code> | <code>null</code> | The site for checking site activity for verification, should be site initial (branch tag). |
+| SCP_SITE | Optional | <code>String</code> | <code>cn</code> | The site for checking site activity for verification, should be site initial (branch tag). |
 
 All config parameters can be provided in the form of environment variables by adding "BHL_" in front of the parameter name, e.g. "<code>BHL_CMD_PREFIX</code>".
