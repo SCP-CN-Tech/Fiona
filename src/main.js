@@ -84,14 +84,12 @@ class CmdHandler {
         "description":"刪除此指令前特定數量的訊息（1-100），預設為10。\nDeletes a specific amount of messages (1-100) before this command, default is 10."
       }
     };
-    var generalHelp = "所有可用指令列表：\nList of all available commands:\n"+pref+Object.keys(cmdDesc).join("\n"+pref)+
-    "\n使用\""+pref+"help [指令]\"可得具體資訊。\nSee\""+pref+"help [Command]\"for more information.";
+    var generalHelp = `所有可用指令列表：\nList of all available commands:\n${pref+Object.keys(cmdDesc).join("\n"+pref)}\n使用  "${pref} help [指令]" 可得具體資訊。\nSee "${pref} help [Command]" for more information.`;
 
     if (!arg[0]||arg[0]===undefined) {msg.channel.send(generalHelp)}
     else if (cmdDesc.hasOwnProperty(arg[0])) {
         msg.channel.send({embed:cmdDesc[arg[0]]});
-      } else { msg.channel.send("指令不存在。使用\""+pref+"help\"尋找更多資料。\nInvalid command. See \""+
-      pref+"help\" for more information."); }
+      } else { msg.channel.send(`指令不存在。使用 "${pref} help" 尋找更多資料。\nInvalid command. See "${pref} help" for more information.`); }
   }
 
   async cmd__purge() {
@@ -106,7 +104,7 @@ class CmdHandler {
     } else {
     msg.channel.bulkDelete(fetched);
     }
-    console.log('Deleted '+fetched.size+' messages from channel '+msg.channel.id);
+    console.log(`Deleted ${fetched.size} messages from channel ${msg.channel.id}`);
   }
 }
 
@@ -126,7 +124,9 @@ class Verifier {
     var targetSite;
     if (this.scptype==="member") { targetSite = config.SCP_SITE } else targetSite = null;
     var users = await this.scp.findUsers(user, {site: targetSite});
-    //users = users.values().filter(each => each.displayName.toLowerCase() === user.toLowerCase());
+    if (users instanceof Map) {
+      users = new Map(Array.from(users).filter(each => each[1].displayName.toLowerCase() === user.toLowerCase()))
+    }
     return users;
   }
 
@@ -172,8 +172,7 @@ disClient.on("message", msg => {
   }
   var cmdHandler = new CmdHandler(disClient, msg)
   if (typeof cmdHandler['cmd__'+cmdHandler.cmd] === 'function') { cmdHandler['cmd__'+cmdHandler.cmd]() } else
-  { msg.channel.send("指令不存在。使用\""+pref+"help\"尋找更多資料。\nInvalid command. See \""+
-  pref+"help\" for more information.") }
+  { msg.channel.send(`指令不存在。使用 "${pref} help" 尋找更多資料。\nInvalid command. See "${pref} help" for more information.`) }
 })
 
 // verifies user to be a member by adding a reaction to specific message or checking their wikidot name
