@@ -192,7 +192,7 @@ if (verifier.type === "reaction") {
     if (msg.author.bot) return;
     if (msg.channel.id !== verifier.channel) return;
     if (!msg.content.toLowerCase().startsWith(pref+'verify ')) return;
-    var username = msg.content.slice((pref+'verify ').length);
+    var username = msg.content.slice((pref+'verify ').length).trim();
     verifier.__getUsers(username).then(users => {
       //console.log(users)
       if (verifier.__checker(users)) {
