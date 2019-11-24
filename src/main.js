@@ -36,7 +36,9 @@ try {
   for (var prop in customCnfg) {
     if (config.hasOwnProperty(prop) && customCnfg.hasOwnProperty(prop)) { config[prop] = customCnfg[prop] }
   }
-} catch (e) { if (e.code === 'MODULE_NOT_FOUND') return; }
+} catch (e) { if (e.code === 'MODULE_NOT_FOUND') {
+	console.log("No config JSON file found. Loading environment variables as config...")
+	} }
 loadEnv(config);
 
 if(!config.DIS_TOKEN||config.DIS_TOKEN===undefined) {
@@ -109,8 +111,7 @@ class CmdHandler {
 }
 
 class Verifier {
-  constructor(client, scp){
-    this.client = client;
+  constructor(scp){
     this.scp = scp;
     this.type = config.DIS_VERIFY_TYPE.toLowerCase();
     this.scptype = config.SCP_CHECK_TYPE.toLowerCase();
@@ -166,7 +167,7 @@ disClient.on("message", msg => {
   } else if (config.DIS_ADMINS instanceof String) {
     if (msg.member.roles.has(config.DIS_ADMINS)) { access += 1; }
   }
-  if (access === 0) {
+  if (!access) {
     msg.channel.send("你沒有使用此指令的權限。\nYou do not have the permissions to use this command.");
     return;
   }
@@ -177,7 +178,7 @@ disClient.on("message", msg => {
 
 // verifies user to be a member by adding a reaction to specific message or checking their wikidot name
 
-var verifier = new Verifier(disClient, scpClient);
+var verifier = new Verifier(scpClient);
 
 if (verifier.type === "reaction") {
   disClient.on("messageReactionAdd", (msgR, user) => {
