@@ -126,7 +126,7 @@ class Verifier {
     if (this.scptype==="member") { targetSite = config.SCP_SITE } else targetSite = null;
     var users = await this.scp.findUsers(user, {site: targetSite});
     if (users instanceof Map) {
-      users = new Map(Array.from(users).filter(each => each[1].displayName.toLowerCase() === user.toLowerCase()))
+      users = new Map(Array.from(users).filter(each => each[1].displayName.toLowerCase().trim() === user.toLowerCase()))
     }
     return users;
   }
