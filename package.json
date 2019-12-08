@@ -5,7 +5,7 @@
   "main": "src/main.js",
   "dependencies": {
     "discord.js": "^11.5.1",
-    "scpper2.js": "^4.0.1"
+    "scpper2.js": "^4.0.2"
   },
   "devDependencies": {},
   "scripts": {
