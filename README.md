@@ -8,7 +8,7 @@
 | Config parameters | Required or not | Values | Default | Description |
 | ---- | ---- | ---- | ---- | ---- |
 | CMD_PREFIX | Optional | <code>String</code> | <code>#/</code> | The prefix for using the commands of the bot |
-| DIS_TOKEN | Required | <code>String</code> | <code>null</code> | The token for logging into your bot account |
+| DIS_TOKEN | Required | <code>String</code> | empty string | The token for logging into your bot account |
 | DIS_ADMINS | Optional | <code>String</code> or <code>Array</code> | <code>null</code> | The admin role id(s) for your server, users are required to have the specified role(s) to use administrative commands |
 | DIS_VERIFY_TYPE | Optional | <code>String</code> | <code>null</code> | Verification methods. Possible values: <code>reaction</code> for adding specific reaction to a specific message or <code>wikidotname</code> for checking against username. Leave blank for disabling verification. |
 | DIS_VERIFY_CHAN | Optional | <code>String</code> | <code>null</code> | Discord channel where the verify message(s) are put if <code>DIS_VERIFY_TYPE</code> is enabled. |
