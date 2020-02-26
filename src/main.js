@@ -185,7 +185,7 @@ if (verifier.type === "reaction") {
     if (user.bot) return;
     if (msgR.message.channel.id !== verifier.channel) return;
     if (msgR.message.id !== verifier.message) return;
-    if (msgR.id !== this.reaction && msgR.identifier !== this.reaction) return;
+    if (![msgR.emoji.id, msgR.emoji.identifier, msgR.emoji.name].includes(this.reaction)) return;
     user.addRole(verifier.role)
   })
 } else if (verifier.type === "wikidotname") {
