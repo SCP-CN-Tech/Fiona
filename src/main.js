@@ -9,6 +9,7 @@ var config = {
   "DIS_VERIFY_MSG": null,
   "DIS_VERIFY_REACT": null,
   "DIS_MEM_ROLE": null,
+  "DIS_BAN": [],
   "SCP_CHECK_TYPE": "exists",
   "SCP_SITE": "cn"
 }
@@ -27,6 +28,8 @@ function loadEnv(cnfg) {
     if (process.env.BHL_DIS_ADMINS.startsWith("["))
      {cnfg.DIS_ADMINS=JSON.parse(process.env.BHL_DIS_ADMINS)} else {cnfg.DIS_ADMINS = process.env.BHL_DIS_ADMINS}
   }
+  if (process.env.BHL_DIS_BAN && process.env.BHL_DIS_BAN!==undefined && process.env.BHL_DIS_BAN.startsWith("["))
+  { cnfg.DIS_BAN=JSON.parse(process.env.BHL_DIS_BAN) }
 
   return cnfg;
 }
@@ -205,3 +208,8 @@ if (verifier.type === "reaction") {
     })
   })
 }
+
+// ban malicious user warned by other servers
+disClient.on("guildMemberAdd", gm => {
+  if (config.DIS_BAN.includes(gm.id)) { gm.ban() }
+})
