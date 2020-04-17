@@ -1,5 +1,7 @@
 // loads config
 const fs = require('fs');
+const got = require('got');
+const cheerio = require('cheerio');
 var config = {
   "CMD_PREFIX": "#/",
   "DIS_TOKEN": null,
@@ -13,6 +15,20 @@ var config = {
   "SCP_CHECK_TYPE": "exists",
   "SCP_SITE": "cn"
 }
+const branchUrls = {
+    "en": "http://scp-wiki.wikidot.com",
+    "ru": "http://scp-ru.wikidot.com",
+    "ko": "http://scpko.wikidot.com",
+    "ja": "http://scp-jp.wikidot.com",
+    "fr": "http://fondationscp.wikidot.com",
+    "es": "http://lafundacionscp.wikidot.com",
+    "th": "http://scp-th.wikidot.com",
+    "pl": "http://scp-pl.wikidot.com",
+    "de": "http://scp-wiki-de.wikidot.com",
+    "cn": "http://scp-wiki-cn.wikidot.com",
+    "it": "http://fondazionescp.wikidot.com",
+    "int": "http://scp-int.wikidot.com"
+};
 
 function loadEnv(cnfg) {
   if (process.env.BHL_CMD_PREFIX && process.env.BHL_CMD_PREFIX!==undefined) { cnfg.CMD_PREFIX = process.env.BHL_CMD_PREFIX };
@@ -50,7 +66,24 @@ if(!config.DIS_TOKEN||config.DIS_TOKEN===undefined) {
 
 var pref = config.CMD_PREFIX;
 
-// creates CmdHandler class for handling Discord commands
+// WD class for calling Wikidot AJAX modules. Modified from https://github.com/resure/wikidot-ajax/blob/master/index.js
+
+class WD {
+  constructor(baseURL) {
+    this.baseURL = `${baseURL}/ajax-module-connector.php`;
+  }
+  async req(params) {
+      const wikidotToken7 = Math.random().toString(36).substring(4).toLowerCase();
+      var res = await got.post(this.baseURL, {
+        headers: {Cookie: `wikidot_token7=${wikidotToken7}`},
+        form: Object.assign({}, {wikidot_token7: wikidotToken7, callbackIndex: 1}, params)
+      }).json();
+      return res;
+  };
+}
+
+
+// CmdHandler class for handling Discord commands
 
 class CmdHandler {
   constructor(client, msg) {
@@ -116,12 +149,14 @@ class CmdHandler {
 class Verifier {
   constructor(scp){
     this.scp = scp;
+    this.branch = branchUrls[config.SCP_SITE];
     this.type = config.DIS_VERIFY_TYPE.toLowerCase();
     this.scptype = config.SCP_CHECK_TYPE.toLowerCase();
     this.channel = config.DIS_VERIFY_CHAN;
     this.message = config.DIS_VERIFY_MSG;
     this.reaction = config.DIS_VERIFY_REACT;
     this.role = config.DIS_MEM_ROLE;
+    this.wd = new WD(this.branch);
   }
 
   async __getUsers(user) {
@@ -134,7 +169,7 @@ class Verifier {
     return users;
   }
 
-  __checker(users){
+  __scpperChecker(users) {
     if (this.scptype!=="exists"&&this.scptype!=="member") return false;
     if (users instanceof Map) {
       if ( !users || users === undefined || users.size === 0 ) return false;
@@ -145,6 +180,35 @@ class Verifier {
       if ( users === undefined || users.length === 0 ) return false;
         if (!user.deleted) return true; else return false;
     }
+  }
+
+  async __getWDUser(username) {
+    return await this.wd.req({
+      moduleName: "users/UserSearchModule",
+      query: username
+    })
+  }
+
+  async __getWDSiteMember(userId) {
+    var res = await this.wd.req({
+      moduleName: "userinfo/UserInfoMemberOfModule",
+      user_id: userId
+    })
+    return cheerio.load(res.body)
+  }
+
+  async __WDChecker(un, nameObj) {
+    if (this.scptype!=="exists"&&this.scptype!=="member") return false;
+    if ( !Object.values(nameObj) || !Object.values(nameObj).length ) return false;
+    var names = Object.values(nameObj).map(x=>x.trim().toLowerCase());
+    if (names.includes(un.toLowerCase())) {
+      if (this.scptype=="exists") return true;
+      else if (this.scptype=="member") {
+        var id = Object.keys(nameObj)[names.indexOf(un.toLowerCase())];
+        var $ = await this.__getWDSiteMember(id);
+        if ($(`a[href="${this.branch}"]`).length) return true; else return false;
+      } else return false;
+    } else return false;
   }
 }
 
@@ -175,8 +239,8 @@ disClient.on("message", msg => {
     return;
   }
   var cmdHandler = new CmdHandler(disClient, msg)
-  if (typeof cmdHandler['cmd__'+cmdHandler.cmd] === 'function') { cmdHandler['cmd__'+cmdHandler.cmd]() } else
-  { msg.channel.send(`指令不存在。使用 "${pref} help" 尋找更多資料。\nInvalid command. See "${pref} help" for more information.`) }
+  if (typeof cmdHandler['cmd__'+cmdHandler.cmd] === 'function') { cmdHandler['cmd__'+cmdHandler.cmd]() }
+  else { msg.channel.send(`指令不存在。使用 "${pref} help" 尋找更多資料。\nInvalid command. See "${pref} help" for more information.`) }
 })
 
 // verifies user to be a member by adding a reaction to specific message or checking their wikidot name
@@ -197,14 +261,24 @@ if (verifier.type === "reaction") {
     if (msg.channel.id !== verifier.channel) return;
     if (!msg.content.toLowerCase().startsWith(pref+'verify ')) return;
     var username = msg.content.slice((pref+'verify ').length).trim();
-    verifier.__getUsers(username).then(users => {
-      //console.log(users)
-      if (verifier.__checker(users)) {
-        msg.member.addRole(verifier.role);
-        msg.channel.send("權限已賦予。\nAccess granted.");
-      } else {
-        msg.channel.send("權限不足。\nAccess denied.");
-      };
+    msg.channel.send("正在驗證您的身份中......\nVerifying your identity...").then(reply=>{
+      verifier.__getUsers(username).then(users => {
+        if (verifier.__scpperChecker(users)) {
+          msg.member.addRole(verifier.role);
+          reply.edit("權限已賦予。\nAccess granted.");
+        } else {
+          verifier.__getWDUser(username).then(res=>{
+            verifier.__WDChecker(username, res.userNames).then(k=>{
+              if (k) {
+                msg.member.addRole(verifier.role);
+                reply.edit("權限已賦予。\nAccess granted.");
+              } else {
+                reply.edit("權限不足。\nAccess denied.");
+              }
+            })
+          })
+        };
+      })
     })
   })
 }

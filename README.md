@@ -1,5 +1,8 @@
 # BanHammerLite
  Just a lightweight banhammer used on SCP-CN Unofficial Discord.
+ Verifies users having wikidot account, for granting member role.
+ Verifies by first calling ScpperDB API, then falls back on calling Wikidot AJAX if not found, as Wikidot is very slow.
+ Wikidot AJAX calling modified from [Resure/wikidot-ajax](https://github.com/resure/wikidot-ajax)
 
 
 ## Usage
