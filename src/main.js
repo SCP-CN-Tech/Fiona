@@ -1,7 +1,6 @@
 // loads config
 const fs = require('fs');
 const got = require('got');
-const cheerio = require('cheerio');
 var config = {
   "CMD_PREFIX": "#/",
   "DIS_TOKEN": null,
@@ -194,7 +193,7 @@ class Verifier {
       moduleName: "userinfo/UserInfoMemberOfModule",
       user_id: userId
     })
-    return cheerio.load(res.body)
+    return res.body;
   }
 
   async __WDChecker(un, nameObj) {
@@ -205,8 +204,8 @@ class Verifier {
       if (this.scptype=="exists") return true;
       else if (this.scptype=="member") {
         var id = Object.keys(nameObj)[names.indexOf(un.toLowerCase())];
-        var $ = await this.__getWDSiteMember(id);
-        if ($(`a[href="${this.branch}"]`).length) return true; else return false;
+        var a = await this.__getWDSiteMember(id);
+         return a.includes(`a href="${this.branch}"`);
       } else return false;
     } else return false;
   }

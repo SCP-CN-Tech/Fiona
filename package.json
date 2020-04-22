@@ -4,7 +4,6 @@
   "description": "Just a lightweight banhammer used on SCP-CN Unofficial Discord.",
   "main": "src/main.js",
   "dependencies": {
-    "cheerio": "^1.0.0-rc.3",
     "discord.js": "11.x",
     "got": "^10.7.0",
     "scpper2.js": "^4.0.2"
