@@ -277,6 +277,18 @@ if (verifier.type === "reaction") {
             })
           })
         };
+      }).catch(e=>{
+        console.log(e);
+        verifier.__getWDUser(username).then(res=>{
+          verifier.__WDChecker(username, res.userNames).then(k=>{
+            if (k) {
+              msg.member.addRole(verifier.role);
+              reply.edit("權限已賦予。\nAccess granted.");
+            } else {
+              reply.edit("權限不足。\nAccess denied.");
+            }
+          })
+        })
       })
     })
   })
