@@ -144,20 +144,28 @@ class CmdHandler {
     console.log(`Deleted ${fetched.size} messages from channel ${msg.channel.id}`);
   }
   
-  async cmd__mute() {
+  cmd__mute() {
 	let msg = this.msgs[this.interactCount];
 	let ppl = msg.mentions.members;
+	let fin = [];
 	ppl.forEach(u=>{
-	  msg.channel.overwritePermissions(u, {"SEND_MESSAGES": false})
+	  fin.push(msg.channel.overwritePermissions(u, {"SEND_MESSAGES": false}))
 	})
+	Promise.all(fin).then(()=>{
+	  msg.channel.send(`Successfully muted.`);
+	}).catch(e=>{console.log(e)})
   }
   
-  async cmd__unmute() {
+  cmd__unmute() {
 	let msg = this.msgs[this.interactCount];
 	let ppl = msg.mentions.members;
+	let fin = [];
 	ppl.forEach(u=>{
-	  msg.channel.overwritePermissions(u, {"SEND_MESSAGES": null})
+	  fin.push(msg.channel.overwritePermissions(u, {"SEND_MESSAGES": null}))
 	})
+	Promise.all(fin).then(()=>{
+	  msg.channel.send(`Successfully unmuted.`);
+	}).catch(e=>{console.log(e)})
   }
 }
 
