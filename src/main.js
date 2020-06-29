@@ -148,7 +148,7 @@ class CmdHandler {
 	let msg = this.msgs[this.interactCount];
 	let ppl = msg.mentions.members;
 	ppl.forEach(u=>{
-	  msg.channel.updateOverwrite(u, {"SEND_MESSAGES": false})
+	  msg.channel.overwritePermissions(u, {"SEND_MESSAGES": false})
 	})
   }
   
@@ -156,7 +156,7 @@ class CmdHandler {
 	let msg = this.msgs[this.interactCount];
 	let ppl = msg.mentions.members;
 	ppl.forEach(u=>{
-	  msg.channel.updateOverwrite(u, {"SEND_MESSAGES": null})
+	  msg.channel.overwritePermissions(u, {"SEND_MESSAGES": null})
 	})
   }
 }
