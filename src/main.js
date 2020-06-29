@@ -143,6 +143,22 @@ class CmdHandler {
     }
     console.log(`Deleted ${fetched.size} messages from channel ${msg.channel.id}`);
   }
+  
+  async cmd__mute() {
+	let msg = this.msgs[this.interactCount];
+	let ppl = msg.mentions.members;
+	ppl.forEach(u=>{
+	  msg.channel.updateOverwrite(u, {"SEND_MESSAGES": false})
+	})
+  }
+  
+  async cmd__unmute() {
+	let msg = this.msgs[this.interactCount];
+	let ppl = msg.mentions.members;
+	ppl.forEach(u=>{
+	  msg.channel.updateOverwrite(u, {"SEND_MESSAGES": null})
+	})
+  }
 }
 
 class Verifier {
