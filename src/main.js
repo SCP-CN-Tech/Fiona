@@ -72,12 +72,12 @@ class WD {
     this.baseURL = `${baseURL}/ajax-module-connector.php`;
   }
   async req(params) {
-      const wikidotToken7 = Math.random().toString(36).substring(4).toLowerCase();
-      var res = await got.post(this.baseURL, {
-        headers: {Cookie: `wikidot_token7=${wikidotToken7}`},
-        form: Object.assign({}, {wikidot_token7: wikidotToken7, callbackIndex: 1}, params)
-      }).json();
-      return res;
+    const wikidotToken7 = Math.random().toString(36).substring(4).toLowerCase();
+    var res = await got.post(this.baseURL, {
+      headers: {Cookie: `wikidot_token7=${wikidotToken7}`},
+      form: Object.assign({}, {wikidot_token7: wikidotToken7, callbackIndex: 1}, params)
+    }).json();
+    return res;
   };
 }
 
@@ -143,7 +143,7 @@ class CmdHandler {
     }
     console.log(`Deleted ${fetched.size} messages from channel ${msg.channel.id}`);
   }
-  
+
   cmd__mute() {
 	let msg = this.msgs[this.interactCount];
 	let ppl = msg.mentions.members;
@@ -155,7 +155,7 @@ class CmdHandler {
 	  msg.channel.send(`Successfully muted.`);
 	}).catch(e=>{console.log(e)})
   }
-  
+
   cmd__unmute() {
 	let msg = this.msgs[this.interactCount];
 	let ppl = msg.mentions.members;
