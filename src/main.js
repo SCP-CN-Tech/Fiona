@@ -52,10 +52,12 @@ disClient.on("message", async msg => {
       let reply = [];
       for (var i = 0; i < rel.length; i++) {
         let {queri, branch} = rel[i].groups
+        branch = branch ? branch.toLowerCase() : undefined
         reply.push(`${!!branch&&!!branchUrls[branch] ? branchUrls[branch] : branchUrls[config.SCP_SITE]}/${queri}`)
       }
       for (var i = 0; i < query.length; i++) {
         let {queri, branch} = query[i].groups
+        branch = branch ? branch.toLowerCase() : undefined
         let res = await crom.searchPages(queri, {
           anyBaseUrl: !!branch&&!!branchUrls[branch] ? branchUrls[branch] : branchUrls[config.SCP_SITE]
         });
@@ -77,11 +79,12 @@ disClient.on("message", async msg => {
       let reply = [];
       for (var i = 0; i < query.length; i++) {
         let {queri, branch} = query[i].groups
+        branch = branch ? branch.toLowerCase() : undefined
         let filter = {
           anyBaseUrl: !!branch&&!!branchUrls[branch] ? branchUrls[branch] : branchUrls[config.SCP_SITE],
           baseUrl: !!branch&&!!branchUrls[branch] ? branchUrls[branch] : branchUrls[config.SCP_SITE]
         }
-        if (branch&&branch.toLowerCase()==="all") { filter.anyBaseUrl=null; filter.baseUrl=null; }
+        if (branch&&branch==="all") { filter.anyBaseUrl=null; filter.baseUrl=null; }
         let res = await crom.searchUsers(queri, filter);
         res = res.data.searchUsers
         if (res.length) {
