@@ -40,6 +40,29 @@ class Crom {
       }
       `)
   }
+
+  async searchUsers(query, filter) {
+    return await this.req(`
+      {
+        searchUsers(query: "${query}", filter: {
+          anyBaseUrl: ${ !!filter && !!filter.anyBaseUrl ? `"${filter.anyBaseUrl}"` : null }
+        }) {
+          name
+          authorInfos {
+            authorPage {
+              url
+            }
+          }
+          statistics${ !!filter && !!filter.baseUrl ? `(baseUrl: "${filter.baseUrl}")` : "" } {
+            rank
+            totalRating
+            meanRating
+            pageCount
+          }
+        }
+      }
+      `)
+  }
 }
 
 module.exports = Crom;
