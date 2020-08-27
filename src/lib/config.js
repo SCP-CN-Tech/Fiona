@@ -48,4 +48,6 @@ if(!config.DIS_TOKEN||config.DIS_TOKEN===undefined) {
   throw new Error("Discord token is required.")
 }
 
+config.SCP_SITE = config.SCP_SITE.toLowerCase()
+
 module.exports = config
