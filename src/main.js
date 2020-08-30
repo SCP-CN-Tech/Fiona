@@ -47,7 +47,7 @@ var crom = new Crom()
 disClient.on("message", async msg => {
   try {
     if (/\[{3}.+\]{3}/gi.test(msg.content)||/\{.+\}/gi.test(msg.content)) {
-      let rel = [...msg.content.matchAll(/\[{3}((?<branch>[a-zA-Z]{2,3})\|)(?<queri>[-\w\:]{1,60})\]{3}/gi)];
+      let rel = [...msg.content.matchAll(/\[{3}((?<branch>[a-zA-Z]{2,3})\|)?(?<queri>[-\w\:]{1,60})\]{3}/gi)];
       let query = [...msg.content.matchAll(/\{(\[(?<branch>[a-zA-Z]{2,3})\])?(?<queri>.+)\}/gi)];
       let reply = [];
       for (var i = 0; i < rel.length; i++) {

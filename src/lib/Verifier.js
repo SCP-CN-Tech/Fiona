@@ -6,8 +6,8 @@ const branchUrls = require('./branch');
 
 class Verifier {
   constructor(scp){
-    this.scp = scp
-    this.bid = scp.config.SCP_SITE
+    this.scp = scp;
+    this.bid = scp.config.SCP_SITE;
     this.branch = branchUrls[scp.config.SCP_SITE];
     this.type = scp.config.DIS_VERIFY_TYPE.toLowerCase();
     this.scptype = scp.config.SCP_CHECK_TYPE.toLowerCase();
@@ -19,9 +19,8 @@ class Verifier {
   }
 
   async __getUsers(user) {
-    var targetSite;
-    if (this.scptype==="member") { targetSite = this.bid } else targetSite = null;
-    var users = await this.scp.findUsers(user, {site: targetSite});
+    let targetSite = this.scptype==="member" ? this.bid : null;
+    let users = await this.scp.findUsers(user, {site: targetSite});
     if (users instanceof Map) {
       users = new Map(Array.from(users).filter(each => each[1].displayName.toLowerCase().trim() === user.toLowerCase()))
     }
@@ -32,7 +31,7 @@ class Verifier {
     if (this.scptype!=="exists"&&this.scptype!=="member") return false;
     if (users instanceof Map) {
       if ( !users || users === undefined || users.size === 0 ) return false;
-      var exists = false;
+      let exists = false;
       users.forEach((id,user) => {if (!user.deleted) { exists = true; }})
       return exists;
     } else if (users instanceof WikidotUser) {
@@ -49,7 +48,7 @@ class Verifier {
   }
 
   async __getWDSiteMember(userId) {
-    var res = await this.wd.req({
+    let res = await this.wd.req({
       moduleName: "userinfo/UserInfoMemberOfModule",
       user_id: userId
     })
@@ -59,13 +58,13 @@ class Verifier {
   async __WDChecker(un, nameObj) {
     if (this.scptype!=="exists"&&this.scptype!=="member") return false;
     if ( !Object.values(nameObj) || !Object.values(nameObj).length ) return false;
-    var names = Object.values(nameObj).map(x=>x.trim().toLowerCase());
+    let names = Object.values(nameObj).map(x=>x.trim().toLowerCase());
     if (names.includes(un.toLowerCase())) {
       if (this.scptype=="exists") return true;
       else if (this.scptype=="member") {
-        var id = Object.keys(nameObj)[names.indexOf(un.toLowerCase())];
-        var a = await this.__getWDSiteMember(id);
-         return a.includes(`a href="${this.branch}"`);
+        let id = Object.keys(nameObj)[names.indexOf(un.toLowerCase())];
+        let a = await this.__getWDSiteMember(id);
+        return a.includes(`a href="${this.branch}"`);
       } else return false;
     } else return false;
   }
