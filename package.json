@@ -1,7 +1,7 @@
 {
-  "name": "BanHammerLite",
+  "name": "Fiona",
   "version": "2.0.0",
-  "description": "Just a lightweight banhammer used on SCP-CN Unofficial Discord.",
+  "description": "Foundation's Intelligence for Operation Navigation and Application",
   "main": "src/main.js",
   "dependencies": {
     "discord.js": "11.x",

@@ -116,7 +116,8 @@ if (verifier.type === "reaction") {
     if (msgR.message.channel.id !== verifier.channel) return;
     if (msgR.message.id !== verifier.message) return;
     if (![msgR.emoji.id, msgR.emoji.identifier, msgR.emoji.name].includes(this.reaction)) return;
-    user.addRole(verifier.role)
+    let member = msgR.message.channel.guild.members.get(user.id);
+    if (member) member.addRole(verifier.role);
   })
 } else if (verifier.type === "wikidotname") {
   disClient.on("message", msg => {

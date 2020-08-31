@@ -1,5 +1,9 @@
-# BanHammerLite
- Just a lightweight banhammer used on SCP-CN Official Discord.
+<div align="center">
+<h1>FIONA</h1>
+<h2>Foundation's Intelligence for Operation Navigation and Application</h2>
+</div>
+
+------
  Verifies users having wikidot account, for granting member role.
  Verifies by first calling ScpperDB API, then falls back on calling Wikidot AJAX if not found, as Wikidot is very slow.
  Wikidot AJAX calling modified from [Resure/wikidot-ajax](https://github.com/resure/wikidot-ajax)
@@ -22,4 +26,4 @@
 | SCP_CHECK_TYPE | Optional | <code>String</code> | <code>exists</code> | Method for checking for user information on ScpperDB if <code>DIS_VERIFY_TYPE</code> is <code>wikidotname</code>. Possible values: <code>exists</code> to check if any user of the provided username exists or <code>member</code> to check if any user of the provided username is a member of provided site. |
 | SCP_SITE | Optional | <code>String</code> | <code>cn</code> | The site for checking site activity for verification, should be site initial (branch tag). |
 
-All config parameters can be provided in the form of environment variables by adding "BHL_" in front of the parameter name, e.g. "<code>BHL_CMD_PREFIX</code>".
+All config parameters can be provided in the form of environment variables by adding "FIO_" in front of the parameter name, e.g. "<code>FIO_CMD_PREFIX</code>".
