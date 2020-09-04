@@ -63,9 +63,12 @@ disClient.on("message", async msg => {
         });
         res = res.data.searchPages
         if (res.length) {
-          let ans = res[0].wikidotInfo.title;
-          ans += res[0].alternateTitles.length ? ` - ${res[0].alternateTitles[0].title}` : ""
-          ans += `\n評分：${res[0].wikidotInfo.rating}\n${res[0].url}`
+          let ans = res[0].wikidotInfo ? res[0].wikidotInfo.title : '' ;
+          ans += ans && res[0].alternateTitles.length ? ' - ' : '';
+          ans += res[0].alternateTitles.length ? res[0].alternateTitles[0].title : '';
+          ans += !ans && res[0].translationOf && res[0].translationOf.wikidotInfo ? res[0].translationOf.wikidotInfo.title : '';
+          ans += res[0].wikidotInfo ? `\n評分：${res[0].wikidotInfo.rating}` : '' ;
+          ans += `\n${res[0].url}`
           reply.push(ans)
         }
       }
