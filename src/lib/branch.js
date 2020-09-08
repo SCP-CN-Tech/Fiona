@@ -4,6 +4,7 @@ module.exports =  {
   "ru": "http://scp-ru.wikidot.com",
   "ko": "http://scpko.wikidot.com",
   "ja": "http://scp-jp.wikidot.com",
+  "jp": "http://scp-jp.wikidot.com",
   "fr": "http://fondationscp.wikidot.com",
   "es": "http://lafundacionscp.wikidot.com",
   "th": "http://scp-th.wikidot.com",
@@ -12,6 +13,7 @@ module.exports =  {
   "cn": "http://scp-wiki-cn.wikidot.com",
   "it": "http://fondazionescp.wikidot.com",
   "pt": "http://scp-pt-br.wikidot.com",
+  "cs": "http://scp-cs.wikidot.com",
   "cz": "http://scp-cs.wikidot.com",
   "int": "http://scp-int.wikidot.com"
 };
