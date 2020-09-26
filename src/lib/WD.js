@@ -5,15 +5,29 @@ const got = require('got');
  */
 class WD {
   constructor(baseURL) {
-    this.baseURL = `${baseURL}/ajax-module-connector.php`;
+    this.base = baseURL;
+    this.ajax = `${baseURL}/ajax-module-connector.php`;
+    this.quick = `${baseURL}/quickmodule.php`;
   }
-  async req(params) {
+  async req(url, params) {
     const wikidotToken7 = Math.random().toString(36).substring(4).toLowerCase();
-    var res = await got.post(this.baseURL, {
+    var res = await got.post(url, {
       headers: {Cookie: `wikidot_token7=${wikidotToken7}`},
       form: Object.assign({}, {wikidot_token7: wikidotToken7, callbackIndex: 1}, params)
     }).json();
     return res;
+  };
+
+  async module(moduleName, params) {
+    return await this.req(this.ajax, Object.assign({
+      moduleName: moduleName,
+    }, params));
+  };
+
+  async quic(module, params) {
+    return await got.get(this.quick, {
+      searchParams: Object.assign({module: module}, params)
+    }).json();
   };
 }
 

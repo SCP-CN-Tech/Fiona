@@ -16,7 +16,7 @@ class Verifier {
     this.reaction = scp.config.DIS_VERIFY_REACT;
     this.role = scp.config.DIS_MEM_ROLE;
     this.wd = new WD(this.branch);
-  }
+  };
 
   async __getUsers(user) {
     let targetSite = this.scptype==="member" ? this.bid : null;
@@ -25,7 +25,7 @@ class Verifier {
       users = new Map(Array.from(users).filter(each => each[1].displayName.toLowerCase().trim() === user.toLowerCase()))
     }
     return users;
-  }
+  };
 
   __scpperChecker(users) {
     if (this.scptype!=="exists"&&this.scptype!=="member") return false;
@@ -38,24 +38,25 @@ class Verifier {
       if ( users === undefined || users.length === 0 ) return false;
         if (!user.deleted) return true; else return false;
     }
-  }
+  };
 
   async __getWDUser(username) {
-    return await this.wd.req({
-      moduleName: "users/UserSearchModule",
-      query: username
-    })
-  }
+    return await this.wd.module("users/UserSearchModule", { query: username });
+  };
+
+  async __getWDQUser(username) {
+    return await this.wd.quic("UserLookupQModule", { q: username });
+  };
 
   async __getWDSiteMember(userId) {
-    let res = await this.wd.req({
-      moduleName: "userinfo/UserInfoMemberOfModule",
-      user_id: userId
+    let res = await this.wd.module("userinfo/UserInfoMemberOfModule", {
+      user_id: userId,
     })
     return res.body;
-  }
+  };
 
-  async __WDChecker(un, nameObj) {
+  async __WDChecker(un) {
+    let {userNames:nameObj} = await this.__getWDUser(un);
     if (this.scptype!=="exists"&&this.scptype!=="member") return false;
     if ( !Object.values(nameObj) || !Object.values(nameObj).length ) return false;
     let names = Object.values(nameObj).map(x=>x.trim().toLowerCase());
@@ -66,8 +67,23 @@ class Verifier {
         let a = await this.__getWDSiteMember(id);
         return a.includes(`a href="${this.branch}"`);
       } else return false;
+    }
+  };
+
+  async __WDQChecker(un) {
+    let {users} = await this.__getWDQUser(un);
+    if (this.scptype!=="exists"&&this.scptype!=="member") return false;
+    if ( !users || !users.length ) return false;
+    let found = users.filter(x=>x.name.toLowerCase()===un.toLowerCase());
+    if (found.length) {
+      if (this.scptype=="exists") return true;
+      else if (this.scptype=="member") {
+        let id = found[0].user_id;
+        let a = await this.__getWDSiteMember(id);
+        return a.includes(`a href="${this.branch}"`);
+      } else return false;
     } else return false;
-  }
+  };
 }
 
 module.exports = Verifier;
