@@ -86,4 +86,46 @@ class Verifier {
   };
 }
 
-module.exports = Verifier;
+module.exports.Verifier = Verifier;
+module.exports.init = ({scpper:scp, discord}) => {
+  let verifier = new Verifier(scp);
+  discord.__verifier = verifier;
+
+  if (verifier.type === "reaction") {
+    discord.on("messageReactionAdd", (msgR, user) => {
+      if (user.bot) return;
+      if (msgR.message.channel.id !== verifier.channel) return;
+      if (msgR.message.id !== verifier.message) return;
+      if (![msgR.emoji.id, msgR.emoji.identifier, msgR.emoji.name].includes(this.reaction)) return;
+      let member = msgR.message.channel.guild.members.resolve(user);
+      if (member) member.roles.add(verifier.role);
+    })
+  } else if (verifier.type === "wikidotname") {
+    discord.on("message", msg => {
+      if (msg.author.bot) return;
+      if (msg.channel.id !== verifier.channel) return;
+      if (!msg.content.toLowerCase().startsWith(pref+'verify ')) return;
+      let username = msg.content.slice((pref+'verify ').length).trim();
+      msg.channel.send("正在驗證您的身份中......\nVerifying your identity...").then(reply=>{
+        let checkwd = async ()=>{
+          let k = await verifier.__WDChecker(username);
+          if (k) {
+            msg.member.roles.add(verifier.role);
+            reply.edit("權限已賦予。\nAccess granted.");
+          } else {
+            reply.edit("權限不足。\nAccess denied.");
+          }
+        }
+        verifier.__getUsers(username).then(users => {
+          if (verifier.__scpperChecker(users)) {
+            msg.member.roles.add(verifier.role);
+            reply.edit("權限已賦予。\nAccess granted.");
+          } else checkwd();
+        }).catch(e=>{
+          console.log(e);
+          checkwd();
+        })
+      })
+    })
+  }
+};

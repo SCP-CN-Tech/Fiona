@@ -14,7 +14,7 @@ let username = "Jochoid"
 
 !(async()=>{
   let t = Date.now()
-  let q = await wd.quic("UserLookupQModule", {
+  let q = await wd.quick("UserLookupQModule", {
     q: username
   })
   t=Date.now()-t

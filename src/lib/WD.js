@@ -7,7 +7,7 @@ class WD {
   constructor(baseURL) {
     this.base = baseURL;
     this.ajax = `${baseURL}/ajax-module-connector.php`;
-    this.quick = `${baseURL}/quickmodule.php`;
+    this.quic = `${baseURL}/quickmodule.php`;
   }
   async req(url, params) {
     const wikidotToken7 = Math.random().toString(36).substring(4).toLowerCase();
@@ -24,8 +24,8 @@ class WD {
     }, params));
   };
 
-  async quic(module, params) {
-    return await got.get(this.quick, {
+  async quick(module, params) {
+    return await got.get(this.quic, {
       searchParams: Object.assign({module: module}, params)
     }).json();
   };

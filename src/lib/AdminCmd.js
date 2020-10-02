@@ -5,7 +5,7 @@
 class AdminCmd {
   constructor(client, msg) {
     this.client = client;
-    this.pref = client.config.CMD_PREFIX
+    this.pref = client.config.CMD_PREFIX;
     this.msgs = [msg];
     this.interactCount = 0;
     this.strs = [msg.content];
@@ -54,37 +54,37 @@ class AdminCmd {
     if ( !num||num === undefined ) { num = 10 };
     if ( num > 100 ) { num = 100 };
     msg.delete();
-    var fetched = await msg.channel.fetchMessages({limit:num});
+    var fetched = await msg.channel.messages.fetch({limit:num});
     if (num===1) {
-      msg.channel.delete(fetched);
+      msg.channel.messages.delete(fetched);
     } else {
-    msg.channel.bulkDelete(fetched);
+      msg.channel.bulkDelete(fetched);
     }
     console.log(`Deleted ${fetched.size} messages from channel ${msg.channel.id}`);
   }
 
   cmd__mute() {
-	let msg = this.msgs[this.interactCount];
-	let ppl = msg.mentions.members;
-	let fin = [];
-	ppl.forEach(u=>{
-	  fin.push(msg.channel.overwritePermissions(u, {"SEND_MESSAGES": false}))
-	})
-	Promise.all(fin).then(()=>{
-	  msg.channel.send(`Successfully muted.`);
-	}).catch(e=>{console.log(e)})
+  	let msg = this.msgs[this.interactCount];
+  	let ppl = msg.mentions.members;
+  	let fin = [];
+  	ppl.forEach(u=>{
+  	  fin.push(msg.channel.updateOverwrite(u, {"SEND_MESSAGES": false}))
+  	})
+  	Promise.all(fin).then(()=>{
+  	  msg.channel.send(`Successfully muted.`);
+  	}).catch(e=>{console.log(e)})
   }
 
   cmd__unmute() {
-	let msg = this.msgs[this.interactCount];
-	let ppl = msg.mentions.members;
-	let fin = [];
-	ppl.forEach(u=>{
-	  fin.push(msg.channel.overwritePermissions(u, {"SEND_MESSAGES": null}))
-	})
-	Promise.all(fin).then(()=>{
-	  msg.channel.send(`Successfully unmuted.`);
-	}).catch(e=>{console.log(e)})
+  	let msg = this.msgs[this.interactCount];
+  	let ppl = msg.mentions.members;
+  	let fin = [];
+  	ppl.forEach(u=>{
+  	  fin.push(msg.channel.updateOverwrite(u, {"SEND_MESSAGES": null}))
+  	})
+  	Promise.all(fin).then(()=>{
+  	  msg.channel.send(`Successfully unmuted.`);
+	  }).catch(e=>{console.log(e)})
   }
 }
 
