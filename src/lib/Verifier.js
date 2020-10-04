@@ -90,6 +90,7 @@ module.exports.Verifier = Verifier;
 module.exports.init = ({scpper:scp, discord}) => {
   let verifier = new Verifier(scp);
   discord.__verifier = verifier;
+  let pref = discord.config.CMD_PREFIX;
 
   if (verifier.type === "reaction") {
     discord.on("messageReactionAdd", (msgR, user) => {
