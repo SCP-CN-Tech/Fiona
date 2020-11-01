@@ -71,6 +71,7 @@ module.exports.init = ({discord}) => {
   let config = discord.config;
   let crom = new Crom()
   discord.on("message", async msg => {
+    if (msg.author.id==discord.user.id) return;
     try {
       if (/\[{3}.+\]{3}/gi.test(msg.content)||/\{.+\}/gi.test(msg.content)) {
         let rel = [...msg.content.matchAll(/\[{3}((?<branch>[a-zA-Z]{2,3})\|)?(?<queri>[-\w\:]{1,60})\]{3}/gi)];
