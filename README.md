@@ -23,6 +23,9 @@
 | DIS_VERIFY_REACT | Optional | <code>String</code> | <code>null</code> | The reaction id/distinguisher to add to message if <code>DIS_VERIFY_TYPE</code> is <code>reaction</code>. |
 | DIS_MEM_ROLE | Optional | <code>String</code> | <code>null</code> | The role id to add to member if <code>DIS_VERIFY_TYPE</code> is enabled. |
 | DIS_BAN | Optional | <code>Array</code> of <code>String</code> | <code>[]</code> | malicious user ids that you are informed of, but hasn't joined your server yet. Use this option to auto-ban them once they join your server. |
+| DIS_LOG_TYPE | Optional | <code>String</code> | <code>null</code> | Message deletion logging type. Possible values: <code>channel</code> for sending logs to a specified channel or <code>dm</code> for sending to a user's private dm. Leave blank for disabling logging. |
+| DIS_LOG_GUILD | Optional | <code>String</code> | <code>null</code> | Discord server of which the deleted message(s) are logged if <code>DIS_LOG_TYPE</code> is enabled. |
+| DIS_LOG_CHAN | Optional | <code>String</code> | <code>null</code> | Discord server channel/user id where the deleted message(s) logs are put if <code>DIS_LOG_TYPE</code> is enabled. |
 | SCP_CHECK_TYPE | Optional | <code>String</code> | <code>exists</code> | Method for checking for user information on ScpperDB if <code>DIS_VERIFY_TYPE</code> is <code>wikidotname</code>. Possible values: <code>exists</code> to check if any user of the provided username exists or <code>member</code> to check if any user of the provided username is a member of provided site. |
 | SCP_SITE | Optional | <code>String</code> | <code>cn</code> | The site for checking site activity for verification, should be site initial (branch tag). |
 

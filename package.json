@@ -1,6 +1,6 @@
 {
   "name": "Fiona",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Foundation's Intelligence for Operation Navigation and Application",
   "main": "src/main.js",
   "dependencies": {

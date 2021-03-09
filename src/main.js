@@ -53,3 +53,19 @@ var verifier = Verifier({
 disClient.on("guildMemberAdd", gm => {
   if (config.DIS_BAN.includes(gm.id)) { gm.ban() }
 })
+
+if (["channel", "dm"].includes(config.DIS_LOG_TYPE)) {
+  disClient.on("messageDelete", m=>{
+    if (m.guild && m.guild.id==config.DIS_LOG_GUILD) {
+      let msg = `[${m.createdAt.toUTCString()}]\n${m.author.tag} deleted in ${m.guild.name} #${m.channel.name}:\n${m.cleanContent}`;
+      let files = [];
+      m.attachments.each(f=>files.append(f.url))
+      if (config.DIS_LOG_TYPE=="channel") {
+        disClient.channels.fetch(config.DIS_LOG_CHAN).then(chan=>chan.send(msg, {files:files}));
+      } else if (config.DIS_LOG_TYPE=="dm") {
+        disClient.users.fetch(config.DIS_LOG_CHAN).then(user=>user.createDM().then(chan=>chan.send(msg, {files:files})));
+      }
+    }
+  })
+  
+}

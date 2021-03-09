@@ -10,8 +10,11 @@ var config = {
   "DIS_VERIFY_REACT": null,
   "DIS_MEM_ROLE": null,
   "DIS_BAN": [],
+  "DIS_LOG_TYPE": "",
+  "DIS_LOG_GUILD": null,
+  "DIS_LOG_CHAN": null,
   "SCP_CHECK_TYPE": "exists",
-  "SCP_SITE": "cn"
+  "SCP_SITE": "cn",
 }
 
 function loadEnv(cnfg) {
@@ -24,6 +27,9 @@ function loadEnv(cnfg) {
   if (process.env.FIO_DIS_VERIFY_MSG && process.env.FIO_DIS_VERIFY_MSG!==undefined) { cnfg.DIS_VERIFY_MSG = process.env.FIO_DIS_VERIFY_MSG };
   if (process.env.FIO_DIS_VERIFY_REACT && process.env.FIO_DIS_VERIFY_REACT!==undefined) { cnfg.DIS_VERIFY_REACT = process.env.FIO_DIS_VERIFY_REACT };
   if (process.env.FIO_DIS_MEM_ROLE && process.env.FIO_DIS_MEM_ROLE!==undefined) { cnfg.DIS_MEM_ROLE = process.env.FIO_DIS_MEM_ROLE };
+  if (process.env.FIO_DIS_LOG_TYPE && process.env.FIO_DIS_LOG_TYPE!==undefined) { cnfg.DIS_LOG_TYPE = process.env.FIO_DIS_LOG_TYPE };
+  if (process.env.FIO_DIS_LOG_GUILD && process.env.FIO_DIS_LOG_GUILD!==undefined) { cnfg.DIS_LOG_GUILD = process.env.FIO_DIS_LOG_GUILD };
+  if (process.env.FIO_DIS_LOG_CHAN && process.env.FIO_DIS_LOG_CHAN!==undefined) { cnfg.DIS_LOG_CHAN = process.env.FIO_DIS_LOG_CHAN };
   if (process.env.FIO_DIS_ADMINS && process.env.FIO_DIS_ADMINS!==undefined) {
     if (process.env.FIO_DIS_ADMINS.startsWith("["))
      {cnfg.DIS_ADMINS=JSON.parse(process.env.FIO_DIS_ADMINS)} else {cnfg.DIS_ADMINS = process.env.FIO_DIS_ADMINS}
@@ -50,4 +56,4 @@ if(!config.DIS_TOKEN||config.DIS_TOKEN===undefined) {
 
 config.SCP_SITE = config.SCP_SITE.toLowerCase()
 
-module.exports = config
+module.exports = config;
