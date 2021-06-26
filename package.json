@@ -1,12 +1,12 @@
 {
   "name": "Fiona",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Foundation's Intelligence for Operation Navigation and Application",
   "main": "src/main.js",
   "dependencies": {
     "discord.js": "^12.3.1",
     "got": "^10.7.0",
-    "scpper2.js": "^4.0.2"
+    "scpper2.js": "^4.1.1"
   },
   "devDependencies": {},
   "scripts": {

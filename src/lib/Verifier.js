@@ -121,10 +121,10 @@ module.exports.init = ({scpper:scp, discord}) => {
           if (verifier.__scpperChecker(users)) {
             msg.member.roles.add(verifier.role);
             reply.edit("權限已賦予。\nAccess granted.");
-          } else checkwd();
+          } else checkwd().catch(console.log);
         }).catch(e=>{
           console.log(e);
-          checkwd();
+          checkwd().catch(console.log);;
         })
       })
     })
