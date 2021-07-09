@@ -31,6 +31,15 @@ disClient.on("message", msg => {
   } else if (config.DIS_ADMINS instanceof String) {
     if (msg.member.roles.cache.has(config.DIS_ADMINS)) { access += 1; }
   }
+  if (config.DIS_CHANMOD[msg.channel.id]!=undefined) {
+    if (config.DIS_CHANMOD[msg.channel.id] instanceof Array) {
+      for (role of config.DIS_CHANMOD[msg.channel.id]) {
+        if (msg.member.roles.cache.has(role)) { access += 1; }
+      }
+    } else if (config.DIS_CHANMOD[msg.channel.id] instanceof String) {
+      if (msg.member.roles.cache.has(config.DIS_CHANMOD[msg.channel.id])) { access += 1; }
+    }
+  }
   if (!access) {
     msg.channel.send("你沒有使用此指令的權限。\nYou do not have the permissions to use this command.");
     return;

@@ -4,6 +4,7 @@ var config = {
   "CMD_PREFIX": "#/",
   "DIS_TOKEN": null,
   "DIS_ADMINS": [],
+  "DIS_CHANMOD": {},
   "DIS_VERIFY_TYPE": "",
   "DIS_VERIFY_CHAN": null,
   "DIS_VERIFY_MSG": null,
@@ -34,6 +35,8 @@ function loadEnv(cnfg) {
     if (process.env.FIO_DIS_ADMINS.startsWith("["))
      {cnfg.DIS_ADMINS=JSON.parse(process.env.FIO_DIS_ADMINS)} else {cnfg.DIS_ADMINS = process.env.FIO_DIS_ADMINS}
   }
+  if (process.env.FIO_DIS_CHANMOD && process.env.FIO_DIS_CHANMOD!==undefined && process.env.FIO_DIS_CHANMOD.startsWith("{"))
+  { cnfg.DIS_CHANMOD=JSON.parse(process.env.FIO_DIS_CHANMOD) }
   if (process.env.FIO_DIS_BAN && process.env.FIO_DIS_BAN!==undefined && process.env.FIO_DIS_BAN.startsWith("["))
   { cnfg.DIS_BAN=JSON.parse(process.env.FIO_DIS_BAN) }
 
