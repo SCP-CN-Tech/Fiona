@@ -1,6 +1,6 @@
 <div align="center">
 <h1>FIONA</h1>
-<h2>Foundation's Intelligence for Operation Navigation and Application</h2>
+<h2>Foundation's Intelligence for Operational Navigation Applications</h2>
 </div>
 
 ------

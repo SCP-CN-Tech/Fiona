@@ -12,7 +12,11 @@ class WD {
   async req(url, params) {
     const wikidotToken7 = Math.random().toString(36).substring(4).toLowerCase();
     var res = await got.post(url, {
-      headers: {Cookie: `wikidot_token7=${wikidotToken7}`, Referer: "FIONA", "User-Agent": "FIONA"},
+      headers: {
+        Cookie: `wikidot_token7=${wikidotToken7}`,
+        Referer: "FIONA",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0"
+      },
       form: Object.assign({}, {wikidot_token7: wikidotToken7, callbackIndex: 1}, params)
     }).json();
     return res;
