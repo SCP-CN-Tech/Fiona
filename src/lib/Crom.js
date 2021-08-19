@@ -39,7 +39,7 @@ class Crom {
           }
         }
       }
-      `)
+    `)
   }
 
   async searchUsers(query, filter) {
@@ -62,7 +62,31 @@ class Crom {
           }
         }
       }
-      `)
+    `)
+  }
+  
+  async searchUserByRank(rank, filter) {
+    if (!(typeof rank == 'number') || isNaN(rank)) { throw new Error('Rank has to be an integer.'); }
+    return await this.req(`
+      {
+        usersByRank(rank: ${rank}, filter: {
+          anyBaseUrl: ${ !!filter && !!filter.anyBaseUrl ? `"${filter.anyBaseUrl}"` : null }
+        }) {
+          name
+          authorInfos {
+            authorPage {
+              url
+            }
+          }
+          statistics${ !!filter && !!filter.baseUrl ? `(baseUrl: "${filter.baseUrl}")` : "" } {
+            rank
+            totalRating
+            meanRating
+            pageCount
+          }
+        }
+      }
+    `)
   }
 }
 
@@ -115,8 +139,10 @@ module.exports.init = ({discord}) => {
             baseUrl: !!branch&&!!branchUrls[branch] ? branchUrls[branch] : branchUrls[config.SCP_SITE]
           }
           if (branch&&branch==="all") { filter.anyBaseUrl=null; filter.baseUrl=null; }
-          let res = await crom.searchUsers(queri, filter);
-          res = res.data.searchUsers
+          let res = /^\#\d+$/.test(queri) ?
+          (await crom.searchUserByRank(parseInt(queri.slice(1)),filter)) :
+          (await crom.searchUsers(queri, filter));
+          res = res.data[/^\#\d+$/.test(queri) ? 'usersByRank' : 'searchUsers'];
           if (res.length) {
             let ans = res[0].name;
             ans += `: ${!!branch&&(branch==="all"||!!branchUrls[branch]) ? branch.toUpperCase() : config.SCP_SITE.toUpperCase()} #${res[0].statistics.rank}`
