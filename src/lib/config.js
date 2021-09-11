@@ -5,6 +5,7 @@ var config = {
   "DIS_TOKEN": null,
   "DIS_ADMINS": [],
   "DIS_CHANMOD": {},
+  "DIS_CROM_BLKCHAN": [],
   "DIS_VERIFY_TYPE": "",
   "DIS_VERIFY_CHAN": null,
   "DIS_VERIFY_MSG": null,
@@ -39,6 +40,8 @@ function loadEnv(cnfg) {
   { cnfg.DIS_CHANMOD=JSON.parse(process.env.FIO_DIS_CHANMOD) }
   if (process.env.FIO_DIS_BAN && process.env.FIO_DIS_BAN!==undefined && process.env.FIO_DIS_BAN.startsWith("["))
   { cnfg.DIS_BAN=JSON.parse(process.env.FIO_DIS_BAN) }
+  if (process.env.FIO_DIS_CROM_BLKCHAN && process.env.FIO_DIS_CROM_BLKCHAN!==undefined && process.env.FIO_DIS_CROM_BLKCHAN.startsWith("["))
+  { cnfg.DIS_CROM_BLKCHAN=JSON.parse(process.env.FIO_DIS_CROM_BLKCHAN) }
 
   return cnfg;
 }
