@@ -31,13 +31,21 @@ class AdminCmd {
   cmd__help() {
     let msg = this.msgs[this.interactCount], arg = this.args[this.interactCount];
     var cmdDesc = {
-      "help":{
-        "title":this.pref+"help",
-        "description":"列出可用指令。\nLists all available commands."
+      "help": {
+        "title": this.pref+"help",
+        "description": "列出可用指令。\nLists all available commands."
       },
-      "purge":{
-        "title":this.pref+"purge",
-        "description":"刪除此指令前特定數量的訊息（1-100），預設為10。\nDeletes a specific amount of messages (1-100) before this command, default is 10."
+      "purge": {
+        "title": this.pref+"purge",
+        "description": "刪除此指令前特定數量的訊息（1-100），預設為10。\nDeletes a specific amount of messages (1-100) before this command, default is 10."
+      },
+      "mute": {
+        "title": this.pref+"mute",
+        "description": "禁言指定用戶。\nMutes specified users."
+      },
+      "unmute": {
+        "title": this.pref+"unmute",
+        "description": "取消禁言指定用戶。\nUnmutes specified users."
       }
     };
     var generalHelp = `所有可用指令列表：\nList of all available commands:\n${this.pref+Object.keys(cmdDesc).join("\n"+this.pref)}\n使用  "${this.pref}help [指令]" 可得具體資訊。\nSee "${this.pref}help [Command]" for more information.`;

@@ -1,1 +1,1 @@
-worker: cd src&&node main.js
+worker: cd src&&bash main.sh
