@@ -40,12 +40,12 @@ class AdminCmd {
         "description":"刪除此指令前特定數量的訊息（1-100），預設為10。\nDeletes a specific amount of messages (1-100) before this command, default is 10."
       }
     };
-    var generalHelp = `所有可用指令列表：\nList of all available commands:\n${this.pref+Object.keys(cmdDesc).join("\n"+this.pref)}\n使用  "${this.pref} help [指令]" 可得具體資訊。\nSee "${pref} help [Command]" for more information.`;
+    var generalHelp = `所有可用指令列表：\nList of all available commands:\n${this.pref+Object.keys(cmdDesc).join("\n"+this.pref)}\n使用  "${this.pref}help [指令]" 可得具體資訊。\nSee "${this.pref}help [Command]" for more information.`;
 
     if (!arg[0]||arg[0]===undefined) {msg.channel.send(generalHelp)}
     else if (cmdDesc.hasOwnProperty(arg[0])) {
         msg.channel.send({embed:cmdDesc[arg[0]]});
-      } else { msg.channel.send(`指令不存在。使用 "${this.pref} help" 尋找更多資料。\nInvalid command. See "${this.pref} help" for more information.`); }
+      } else { msg.channel.send(`指令不存在。使用 "${this.pref}help" 尋找更多資料。\nInvalid command. See "${this.pref}help" for more information.`); }
   }
 
   async cmd__purge() {
