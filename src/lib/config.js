@@ -47,7 +47,7 @@ function loadEnv(cnfg) {
 }
 
 try {
-  let customCnfg = JSON.parse(fs.readFileSync('./data/debugcnfg.json', 'utf8'));
+  let customCnfg = JSON.parse(fs.readFileSync('./data/config.json', 'utf8'));
   for (var prop in customCnfg) {
     if (config.hasOwnProperty(prop) && customCnfg.hasOwnProperty(prop)) { config[prop] = customCnfg[prop] }
   }
