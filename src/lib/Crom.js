@@ -129,8 +129,8 @@ module.exports.init = ({discord}) => {
         } else {
           msg.channel.send("無結果。")
         }
-      } else if (/\&.+\&/gi.test(msg.content)) {
-        let query = [...msg.content.matchAll(/\&(\[(?<branch>[a-zA-Z]{2,3})\])?(?<queri>.+)\&/gi)];
+      } else if (/\$.+\$/gi.test(msg.content)) {
+        let query = [...msg.content.matchAll(/\$(\[(?<branch>[a-zA-Z]{2,3})\])?(?<queri>.+)\$/gi)];
         let reply = [];
         for (var i = 0; i < query.length; i++) {
           let {queri, branch} = query[i].groups;
