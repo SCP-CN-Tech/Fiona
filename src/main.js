@@ -21,9 +21,6 @@ const disClient = new Client({
   ],
   partials: [
     Partials.Channel,
-    Partials.GuildMember,
-    Partials.Message,
-    Partials.Reaction,
   ],
 });
 disClient.login(config.DIS_TOKEN);
