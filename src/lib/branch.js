@@ -12,8 +12,12 @@ module.exports =  {
   "de": "http://scp-wiki-de.wikidot.com",
   "cn": "http://scp-wiki-cn.wikidot.com",
   "it": "http://fondazionescp.wikidot.com",
+  "ua": "http://scp-ukrainian.wikidot.com/",
   "pt": "http://scp-pt-br.wikidot.com",
+  "ptbr": "http://scp-pt-br.wikidot.com",
   "cs": "http://scp-cs.wikidot.com",
   "cz": "http://scp-cs.wikidot.com",
-  "int": "http://scp-int.wikidot.com"
+  "vn": "http://scp-vn.wikidot.com",
+  "id": "http://scp-idn.wikidot.com",
+  "int": "http://scp-int.wikidot.com",
 };
