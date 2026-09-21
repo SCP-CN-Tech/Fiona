@@ -1,4 +1,3 @@
-const got = require('got');
 const branchUrls = require('./branch');
 
 /**
@@ -9,11 +8,15 @@ class Crom {
     this.base = `https://api.crom.avn.sh/graphql`
   }
   async req(query) {
-    return await got.post(this.base, {
-      json: {
+    return await fetch(this.base, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
         query: query.trim()
-      }
-    }).json()
+      })
+    }).then(res=>res.json())
   }
 
   async searchPages(query, filter) {

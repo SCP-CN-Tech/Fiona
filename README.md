@@ -8,6 +8,7 @@ Verifies users having wikidot account, for granting member role.
 Verifies by first calling [ScpperDB](https://github.com/FiftyNine/ScpperDB) API, then falls back on calling Wikidot AJAX if not found, as Wikidot is very slow.
 Wikidot AJAX calling modified from [Resure/wikidot-ajax](https://github.com/resure/wikidot-ajax)
 
+Requires Node 18 or above.
 
 ## Usage
 The bot accepts the form of JSON and environment variables for config and always uses environment variables if provided.
