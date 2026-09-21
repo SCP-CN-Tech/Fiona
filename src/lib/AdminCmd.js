@@ -76,7 +76,7 @@ class AdminCmd {
   	let ppl = msg.mentions.members;
   	let fin = [];
   	ppl.forEach(u=>{
-  	  fin.push(msg.channel.updateOverwrite(u, {"SEND_MESSAGES": false}))
+  	  fin.push(msg.channel.permissionOverwrites.edit(u, { SendMessages: false }))
   	})
   	Promise.all(fin).then(()=>{
   	  msg.channel.send(`Successfully muted.`);
@@ -88,7 +88,7 @@ class AdminCmd {
   	let ppl = msg.mentions.members;
   	let fin = [];
   	ppl.forEach(u=>{
-  	  fin.push(msg.channel.updateOverwrite(u, {"SEND_MESSAGES": null}))
+  	  fin.push(msg.channel.permissionOverwrites.edit(u, { SendMessages: null }))
   	})
   	Promise.all(fin).then(()=>{
   	  msg.channel.send(`Successfully unmuted.`);
