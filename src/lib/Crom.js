@@ -4,8 +4,9 @@ const branchUrls = require('./branch');
  * Interacter with Crom wiki crawler api.
  */
 class Crom {
-  constructor() {
+  constructor(config) {
     this.base = `https://api.crom.avn.sh/graphql`
+    if (config) this.config = config
   }
   async req(query) {
     return await fetch(this.base, {
@@ -94,6 +95,8 @@ class Crom {
 }
 
 module.exports.Crom = Crom;
+module.exports.init = ({discord, config}) => {
+  let crom = new Crom(config)
   discord.on("messageCreate", async msg => {
     if (config.DIS_CROM_BLKCHAN.includes(msg.channel.id)) return;
     if (msg.author.id==discord.user.id) return;
@@ -167,4 +170,5 @@ module.exports.Crom = Crom;
       console.log(e)
     }
   })
+  return crom;
 }

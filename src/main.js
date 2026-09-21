@@ -7,9 +7,6 @@ const AdminCmd = require('./lib/AdminCmd');
 const {init:Verifier} = require('./lib/Verifier');
 
 // loads module and handlers
-const Scpper = require('scpper2.js');
-const scpClient = new Scpper.Scpper({site:config.SCP_SITE});
-scpClient.config = config;
 
 const { Client, GatewayIntentBits, Partials, Events } = require('discord.js');
 const disClient = new Client({
@@ -66,12 +63,13 @@ disClient.on(Events.MessageCreate, msg => {
 })
 
 // handles inline query
-var crom = Crom({discord:disClient});
+var crom = Crom({discord:disClient, config});
 
 // verifies user to be a member by adding a reaction to specific message or checking their wikidot name
 var verifier = Verifier({
-  scpper: scpClient,
   discord: disClient,
+  crom,
+  config,
 });
 
 // ban malicious user warned by other servers

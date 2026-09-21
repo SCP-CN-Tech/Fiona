@@ -5,43 +5,44 @@ const branchUrls = require('./branch');
  */
 
 class Verifier {
-  constructor(scp){
-    this.scp = scp;
-    this.bid = scp.config.SCP_SITE;
-    this.branch = branchUrls[scp.config.SCP_SITE];
-    this.type = scp.config.DIS_VERIFY_TYPE.toLowerCase();
-    this.scptype = scp.config.SCP_CHECK_TYPE.toLowerCase();
-    this.channel = scp.config.DIS_VERIFY_CHAN;
-    this.message = scp.config.DIS_VERIFY_MSG;
-    this.reaction = scp.config.DIS_VERIFY_REACT;
-    this.role = scp.config.DIS_MEM_ROLE;
+  constructor(crom, config){
+    this.crom = crom;
+    this.bid = config.SCP_SITE;
+    this.branch = branchUrls[config.SCP_SITE];
+    this.type = config.DIS_VERIFY_TYPE.toLowerCase();
+    this.scptype = config.SCP_CHECK_TYPE.toLowerCase();
+    this.channel = config.DIS_VERIFY_CHAN;
+    this.message = config.DIS_VERIFY_MSG;
+    this.reaction = config.DIS_VERIFY_REACT;
+    this.role = config.DIS_MEM_ROLE;
     this.wd = new WD(this.branch);
   };
 
   async __getUsers(user) {
-    let targetSite = this.scptype==="member" ? this.bid : null;
-    let users = await this.scp.findUsers(user, {site: targetSite});
-    if (users instanceof Map) {
-      users = new Map(Array.from(users).filter(each => each[1].displayName.toLowerCase().trim() === user.toLowerCase()))
+    let targetSite = this.scptype==="member" ? this.branch : null;
+    let users = await this.crom.searchUsers(user, {anyBaseUrl: targetSite});
+    if (users.data) {
+      users = users.data.searchUsers?.filter(each => each.name.toLowerCase().trim() === user.toLowerCase());
     }
     return users;
   };
 
-  __scpperChecker(users) {
+  __cromChecker(users) {
     if (this.scptype!=="exists"&&this.scptype!=="member") return false;
-    if (users instanceof Map) {
-      if ( !users || users === undefined || users.size === 0 ) return false;
-      let exists = false;
-      users.forEach((id,user) => {if (!user.deleted) { exists = true; }})
-      return exists;
-    } else if (users instanceof WikidotUser) {
-      if ( users === undefined || users.length === 0 ) return false;
-        if (!user.deleted) return true; else return false;
-    }
+    else if (Array.isArray(users) && users.length) return true;
+    else return false;
+  }
+
+  async __getWDSUser(username) {
+    return await this.wd.module("users/UserSearchModule", { query: username });
   };
 
-  async __getWDUser(username) {
-    return await this.wd.module("users/UserSearchModule", { query: username });
+  async __getWDPUser(username) {
+    return await this.wd.module("edit/PagePreviewModule", {
+      mode: "page",
+      page_unix_name: "",
+      source: `[[user ${username}]]`,
+    });
   };
 
   async __getWDQUser(username) {
@@ -56,7 +57,7 @@ class Verifier {
   };
 
   async __WDChecker(un) {
-    let {userNames:nameObj} = await this.__getWDUser(un);
+    let {userNames:nameObj} = await this.__getWDSUser(un);
     if (this.scptype!=="exists"&&this.scptype!=="member") return false;
     if ( !Object.values(nameObj) || !Object.values(nameObj).length ) return false;
     let names = Object.values(nameObj).map(x=>x.trim().toLowerCase());
@@ -87,10 +88,14 @@ class Verifier {
 }
 
 module.exports.Verifier = Verifier;
-module.exports.init = ({scpper:scp, discord}) => {
-  let verifier = new Verifier(scp);
+module.exports.init = ({
+  discord,
+  crom,
+  config,
+}) => {
+  let verifier = new Verifier(crom, config);
   discord.__verifier = verifier;
-  let pref = discord.config.CMD_PREFIX;
+  let pref = config.CMD_PREFIX;
 
   if (verifier.type === "reaction") {
     discord.on("messageReactionAdd", (msgR, user) => {
@@ -118,7 +123,7 @@ module.exports.init = ({scpper:scp, discord}) => {
           }
         }
         verifier.__getUsers(username).then(users => {
-          if (verifier.__scpperChecker(users)) {
+          if (verifier.__cromChecker(users)) {
             msg.member.roles.add(verifier.role);
             reply.edit("權限已賦予。\nAccess granted.");
           } else checkwd().catch(console.log);
@@ -129,4 +134,5 @@ module.exports.init = ({scpper:scp, discord}) => {
       })
     })
   }
+  return verifier;
 };

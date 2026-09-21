@@ -33,8 +33,11 @@ function loadEnv(cnfg) {
   if (process.env.FIO_DIS_LOG_GUILD && process.env.FIO_DIS_LOG_GUILD!==undefined) { cnfg.DIS_LOG_GUILD = process.env.FIO_DIS_LOG_GUILD };
   if (process.env.FIO_DIS_LOG_CHAN && process.env.FIO_DIS_LOG_CHAN!==undefined) { cnfg.DIS_LOG_CHAN = process.env.FIO_DIS_LOG_CHAN };
   if (process.env.FIO_DIS_ADMINS && process.env.FIO_DIS_ADMINS!==undefined) {
-    if (process.env.FIO_DIS_ADMINS.startsWith("["))
-     {cnfg.DIS_ADMINS=JSON.parse(process.env.FIO_DIS_ADMINS)} else {cnfg.DIS_ADMINS = process.env.FIO_DIS_ADMINS}
+    if (process.env.FIO_DIS_ADMINS.startsWith("[")) {
+      cnfg.DIS_ADMINS=JSON.parse(process.env.FIO_DIS_ADMINS)
+    } else {
+      cnfg.DIS_ADMINS = process.env.FIO_DIS_ADMINS
+    }
   }
   if (process.env.FIO_DIS_CHANMOD && process.env.FIO_DIS_CHANMOD!==undefined && process.env.FIO_DIS_CHANMOD.startsWith("{"))
   { cnfg.DIS_CHANMOD=JSON.parse(process.env.FIO_DIS_CHANMOD) }

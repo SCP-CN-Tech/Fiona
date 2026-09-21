@@ -4,8 +4,7 @@
   "description": "Foundation's Intelligence for Operation Navigation and Application",
   "main": "src/main.js",
   "dependencies": {
-    "discord.js": "^14.27.0",
-    "scpper2.js": "^4.1.1"
+    "discord.js": "^14.27.0"
   },
   "scripts": {
     "start": "cd src && node main.js",
