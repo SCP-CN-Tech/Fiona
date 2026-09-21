@@ -11,17 +11,33 @@ const Scpper = require('scpper2.js');
 const scpClient = new Scpper.Scpper({site:config.SCP_SITE});
 scpClient.config = config;
 
-const Discord = require('discord.js');
-const disClient = new Discord.Client({ autoReconnect: true });
+const { Client, GatewayIntentBits, Partials, Events } = require('discord.js');
+const disClient = new Client({
+  intents: [
+    GatewayIntentBits.DirectMessages,
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildEmojisAndStickers,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.MessageContent,
+  ],
+  partials: [
+    Partials.Channel,
+    Partials.GuildMember,
+    Partials.Message,
+    Partials.Reaction,
+  ],
+});
 disClient.login(config.DIS_TOKEN);
 disClient.config = config;
 
-disClient.on("ready", () => {
-  console.log(`Logged into ${disClient.user.tag}.`)
+disClient.on(Events.ClientReady, () => {
+  console.log(`Logged into ${disClient.user?.tag}.`)
 })
 
 // handles administrative commands
-disClient.on("message", msg => {
+disClient.on(Events.MessageCreate, msg => {
   if (!msg.content.toLowerCase().startsWith(pref)||msg.content.toLowerCase().startsWith(pref+'verify')) return;
   let access = 0;
   if (config.DIS_ADMINS instanceof Array) {
@@ -59,12 +75,12 @@ var verifier = Verifier({
 });
 
 // ban malicious user warned by other servers
-disClient.on("guildMemberAdd", gm => {
+disClient.on(Events.GuildMemberAdd, gm => {
   if (config.DIS_BAN.includes(gm.id)) { gm.ban() }
 })
 
 if (["channel", "dm"].includes(config.DIS_LOG_TYPE)) {
-  disClient.on("messageDelete", m=>{
+  disClient.on(Events.MessageDelete, m=>{
     if (m.guild && m.guild.id==config.DIS_LOG_GUILD) {
       let msg = `[${m.createdAt.toUTCString()}]\n${m.author.tag} deleted in ${m.guild.name} #${m.channel.name}:\n${m.cleanContent}`;
       let files = [];

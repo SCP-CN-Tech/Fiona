@@ -102,7 +102,7 @@ module.exports.init = ({scpper:scp, discord}) => {
       if (member) member.roles.add(verifier.role);
     })
   } else if (verifier.type === "wikidotname") {
-    discord.on("message", msg => {
+    discord.on("messageCreate", msg => {
       if (msg.author.bot) return;
       if (msg.channel.id !== verifier.channel) return;
       if (!msg.content.toLowerCase().startsWith(pref+'verify ')) return;

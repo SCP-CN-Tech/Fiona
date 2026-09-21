@@ -94,10 +94,7 @@ class Crom {
 }
 
 module.exports.Crom = Crom;
-module.exports.init = ({discord}) => {
-  let config = discord.config;
-  let crom = new Crom()
-  discord.on("message", async msg => {
+  discord.on("messageCreate", async msg => {
     if (config.DIS_CROM_BLKCHAN.includes(msg.channel.id)) return;
     if (msg.author.id==discord.user.id) return;
     try {
