@@ -18,6 +18,6 @@ module.exports =  {
   "cs": "http://scp-cs.wikidot.com",
   "cz": "http://scp-cs.wikidot.com",
   "vn": "http://scp-vn.wikidot.com",
-  "id": "http://scp-idn.wikidot.com",
+  "id": "http://scp-id.wikidot.com",
   "int": "http://scp-int.wikidot.com",
 };
