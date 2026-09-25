@@ -15,7 +15,7 @@ class Verifier {
     this.message = config.DIS_VERIFY_MSG;
     this.reaction = config.DIS_VERIFY_REACT;
     this.role = config.DIS_MEM_ROLE;
-    this.wd = new WD(this.branch);
+    this.wd = new WD(this.branch.replace("http://", "https://"));
   };
 
   async __getUsers(user) {
